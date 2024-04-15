@@ -74,6 +74,26 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
     terminal_buffer[i] = vga_entry(c, color);
 }
 
+void terminal_clearline(size_t y) {
+    for (size_t x = 0; x < VGA_WIDTH; x++) {
+        terminal_putentryat(' ', terminal_color, x, y);
+    }
+}
+
+void terminal_scroll() {
+    terminal_clearline(0);
+    for (size_t y = 1; y < VGA_HEIGHT; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            const size_t curr = y * VGA_WIDTH + x;
+            /* terminal_buffer[prev] = */
+            /*     vga_entry(terminal_buffer[curr], terminal_color); */
+            terminal_putentryat(terminal_buffer[curr], terminal_color, x,
+                                y - 1);
+        }
+    }
+    terminal_clearline(VGA_HEIGHT - 1);
+}
+
 void terminal_putchar(char c) {
     if (c == '\n') {
         terminal_row++;
@@ -85,8 +105,12 @@ void terminal_putchar(char c) {
     if (++terminal_column == VGA_WIDTH) {
         terminal_column = 0;
         if (++terminal_row == VGA_HEIGHT) {
-            terminal_row = 0;
+            terminal_scroll();
+            terminal_row = VGA_HEIGHT - 1;
         }
+    } else if (terminal_row == VGA_HEIGHT) {
+        terminal_scroll();
+        terminal_row = VGA_HEIGHT - 1;
     }
 }
 
@@ -104,4 +128,32 @@ void kernel_main() {
     terminal_initialize();
 
     terminal_writestring("Hello, world!\n");
+    terminal_writestring("sssssssssssssssssssssssssssssss\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("Hello, world!\n");
+    terminal_writestring("bub");
 }
