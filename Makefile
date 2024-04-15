@@ -9,3 +9,9 @@ all:
 
 run:
 	qemu-system-i386 -cdrom tetris-os.iso
+
+clean:
+	rm *.o
+	rm *.bin
+	rm *.iso
+	rm -rf isodir/
