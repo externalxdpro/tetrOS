@@ -1,0 +1,12 @@
+#+title: Readme
+
+* Dependencies
++ make
++ qemu
++ grub
+
+* Running
+Unix-like:
+#+begin_src shell
+make && make run
+#+end_src
