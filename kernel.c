@@ -81,12 +81,9 @@ void terminal_clearline(size_t y) {
 }
 
 void terminal_scroll() {
-    terminal_clearline(0);
     for (size_t y = 1; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             const size_t curr = y * VGA_WIDTH + x;
-            /* terminal_buffer[prev] = */
-            /*     vga_entry(terminal_buffer[curr], terminal_color); */
             terminal_putentryat(terminal_buffer[curr], terminal_color, x,
                                 y - 1);
         }
