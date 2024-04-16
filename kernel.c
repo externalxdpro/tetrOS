@@ -49,108 +49,105 @@ size_t strlen(const char *str) {
 static const size_t VGA_WIDTH  = 80;
 static const size_t VGA_HEIGHT = 25;
 
-size_t    terminal_row;
-size_t    terminal_column;
-uint8_t   terminal_color;
-uint16_t *terminal_buffer;
+size_t    tty_row;
+size_t    tty_column;
+uint8_t   tty_color;
+uint16_t *tty_buffer;
 
-void terminal_initialize() {
-    terminal_row    = 0;
-    terminal_column = 0;
-    terminal_color  = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-    terminal_buffer = (uint16_t *)0xB8000;
+void tty_initialize() {
+    tty_row    = 0;
+    tty_column = 0;
+    tty_color  = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+    tty_buffer = (uint16_t *)0xB8000;
     for (size_t y = 0; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
-            const size_t i     = y * VGA_WIDTH + x;
-            terminal_buffer[i] = vga_entry(' ', terminal_color);
+            const size_t i = y * VGA_WIDTH + x;
+            tty_buffer[i]  = vga_entry(' ', tty_color);
         }
     }
 }
 
-void terminal_setcolor(uint8_t color) { terminal_color = color; }
+void tty_setcolor(uint8_t color) { tty_color = color; }
 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
-    const size_t i     = y * VGA_WIDTH + x;
-    terminal_buffer[i] = vga_entry(c, color);
+void tty_putentryat(char c, uint8_t color, size_t x, size_t y) {
+    const size_t i = y * VGA_WIDTH + x;
+    tty_buffer[i]  = vga_entry(c, color);
 }
 
-void terminal_clearline(size_t y) {
+void tty_clearline(size_t y) {
     for (size_t x = 0; x < VGA_WIDTH; x++) {
-        terminal_putentryat(' ', terminal_color, x, y);
+        tty_putentryat(' ', tty_color, x, y);
     }
 }
 
-void terminal_scroll() {
+void tty_scroll() {
     for (size_t y = 1; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             const size_t curr = y * VGA_WIDTH + x;
-            terminal_putentryat(terminal_buffer[curr], terminal_color, x,
-                                y - 1);
+            tty_putentryat(tty_buffer[curr], tty_color, x, y - 1);
         }
     }
-    terminal_clearline(VGA_HEIGHT - 1);
+    tty_clearline(VGA_HEIGHT - 1);
 }
 
-void terminal_putchar(char c) {
+void tty_putchar(char c) {
     if (c == '\n') {
-        terminal_row++;
-        terminal_column = 0;
+        tty_row++;
+        tty_column = 0;
     } else {
-        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        tty_putentryat(c, tty_color, tty_column, tty_row);
     }
 
-    if (++terminal_column == VGA_WIDTH) {
-        terminal_column = 0;
-        if (++terminal_row == VGA_HEIGHT) {
-            terminal_scroll();
-            terminal_row = VGA_HEIGHT - 1;
+    if (++tty_column == VGA_WIDTH) {
+        tty_column = 0;
+        if (++tty_row == VGA_HEIGHT) {
+            tty_scroll();
+            tty_row = VGA_HEIGHT - 1;
         }
-    } else if (terminal_row == VGA_HEIGHT) {
-        terminal_scroll();
-        terminal_row = VGA_HEIGHT - 1;
+    } else if (tty_row == VGA_HEIGHT) {
+        tty_scroll();
+        tty_row = VGA_HEIGHT - 1;
     }
 }
 
-void terminal_write(const char *data, size_t n) {
+void tty_write(const char *data, size_t n) {
     for (size_t i = 0; i < n; i++) {
-        terminal_putchar(data[i]);
+        tty_putchar(data[i]);
     }
 }
 
-void terminal_writestring(const char *string) {
-    terminal_write(string, strlen(string));
-}
+void tty_writestring(const char *string) { tty_write(string, strlen(string)); }
 
 void kernel_main() {
-    terminal_initialize();
+    tty_initialize();
 
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("sssssssssssssssssssssssssssssss\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("Hello, world!\n");
-    terminal_writestring("bub");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("sssssssssssssssssssssssssssssss\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("Hello, world!\n");
+    tty_writestring("bub");
 }
