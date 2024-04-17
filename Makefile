@@ -1,17 +1,43 @@
-all:
-	binutils/bin/i686-elf-as boot.s -o boot.o
-	binutils/bin/i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-	binutils/bin/i686-elf-gcc -T linker.ld -o tetris-os.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
-	mkdir -p isodir/boot/grub
-	cp tetris-os.bin isodir/boot/tetris-os.bin
-	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub2-mkrescue -o tetris-os.iso isodir
+CC=./binutils/bin/i686-elf-gcc
+ASM=./binutils/bin/i686-elf-as
+LD=./binutils/bin/i686-elf-ld
 
-run:
-	qemu-system-i386 -cdrom tetris-os.iso
+GFLAGS=
+CCFLAGS=-std=c11 -O2 -g
+CCFLAGS+=-Wall -Wextra -Wpedantic -Wstrict-aliasing -Wno-pointer-arith -Wno-unused-parameter
+CCFLAGS+=-ffreestanding
+ASFLAGS=
+LDFLAGS=
+
+KERNEL_C_SRCS=$(wildcard src/*.c)
+KERNEL_S_SRCS=$(wildcard src/*.s)
+KERNEL_OBJS=$(KERNEL_C_SRCS:.c=.o) $(KERNEL_S_SRCS:.s=.o)
+
+KERNEL=kernel.bin
+ISO=boot.iso
+
+all: dirs kernel
+
+dirs:
+	mkdir -p bin
+	mkdir -p isodir/boot/grub
 
 clean:
-	rm *.o
-	rm *.bin
-	rm *.iso
-	rm -rf isodir/
+	rm ./**/*.o
+	rm ./**/*.bin
+	rm ./*.iso
+	rm -rf ./isodir/
+
+%.o: %.c
+	$(CC) -o $@ -c $< $(GFLAGS) $(CCFLAGS)
+
+%.o: %.s
+	$(ASM) -o $@ -c $< $(GFLAGS) $(ASFLAGS)
+
+kernel: $(KERNEL_OBJS)
+	$(LD) -o ./bin/$(KERNEL) $^ $(LDFLAGS) -Tsrc/linker.ld
+
+iso: kernel
+	cp bin/$(KERNEL) isodir/boot/
+	cp src/grub.cfg isodir/boot/grub/
+	grub-mkrescue -o $(ISO) isodir
