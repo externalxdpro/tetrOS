@@ -38,7 +38,7 @@ _start:
 
 
 .global idt_load
+.extern idtp
 idt_load:
-    mov 4(%esp), %eax
-    lidt (%eax)
+    lidt [idtp]
     ret
