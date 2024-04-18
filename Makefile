@@ -23,9 +23,9 @@ dirs:
 	mkdir -p isodir/boot/grub
 
 clean:
-	rm ./**/*.o
-	rm ./**/*.bin
-	rm ./*.iso
+	rm -f ./**/*.o
+	rm -f ./**/*.bin
+	rm -f ./*.iso
 	rm -rf ./isodir/
 
 %.o: %.c

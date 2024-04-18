@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "idt.h"
 #include "tty.h"
 
 #if defined(__linux__)
@@ -14,6 +15,8 @@
 #endif
 
 void kernel_main() {
+    idt_install();
+
     tty_initialize();
 
     tty_writestring("Hello, world!\n");
