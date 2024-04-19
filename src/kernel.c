@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "gdt.h"
 #include "idt.h"
 #include "tty.h"
 
@@ -15,6 +16,7 @@
 #endif
 
 void kernel_main() {
+    gdt_install();
     idt_install();
 
     tty_initialize();
@@ -48,4 +50,6 @@ void kernel_main() {
     tty_writestring("Hello, world!\n");
     tty_writestring("Hello, world!\n");
     tty_writestring("bub");
+
+    __asm__("div %0" ::"r"(0));
 }
