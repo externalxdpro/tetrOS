@@ -4,6 +4,7 @@
 
 #include "gdt.h"
 #include "idt.h"
+#include "irq.h"
 #include "isr.h"
 #include "tty.h"
 
@@ -20,6 +21,9 @@ void kernel_main() {
     gdt_install();
     idt_install();
     isr_install();
+    irq_install();
+    __asm__ __volatile__("sti");
+
     tty_initialize();
 
     tty_writestring("Hello, world!\n");
@@ -51,6 +55,4 @@ void kernel_main() {
     tty_writestring("Hello, world!\n");
     tty_writestring("Hello, world!\n");
     tty_writestring("bub");
-
-    __asm__("div %0" ::"r"(0));
 }
