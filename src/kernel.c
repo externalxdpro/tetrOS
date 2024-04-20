@@ -4,6 +4,7 @@
 
 #include "gdt.h"
 #include "idt.h"
+#include "isr.h"
 #include "tty.h"
 
 #if defined(__linux__)
@@ -18,7 +19,7 @@
 void kernel_main() {
     gdt_install();
     idt_install();
-
+    isr_install();
     tty_initialize();
 
     tty_writestring("Hello, world!\n");
