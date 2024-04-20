@@ -1,5 +1,6 @@
 #include "isr.h"
 #include "idt.h"
+#include "system.h"
 #include "tty.h"
 
 extern void _isr0();
@@ -105,10 +106,6 @@ static const char *exceptions[32] = {
 
 void fault_handler(struct registers *r) {
     if (r->int_no < 32) {
-        tty_clearscreen();
-        tty_writestring(exceptions[r->int_no]);
-
-        for (;;) {
-        }
+        panic(exceptions[r->int_no]);
     }
 }
