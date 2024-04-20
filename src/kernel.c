@@ -6,6 +6,7 @@
 #include "idt.h"
 #include "irq.h"
 #include "isr.h"
+#include "timer.h"
 #include "tty.h"
 
 #if defined(__linux__)
@@ -23,36 +24,9 @@ void kernel_main() {
     isr_install();
     irq_install();
     __asm__ __volatile__("sti");
+    timer_install();
 
     tty_initialize();
 
     tty_writestring("Hello, world!\n");
-    tty_writestring("sssssssssssssssssssssssssssssss\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("Hello, world!\n");
-    tty_writestring("bub");
 }
