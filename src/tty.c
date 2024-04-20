@@ -40,6 +40,14 @@ void tty_clearline(size_t y) {
     }
 }
 
+void tty_clearscreen() {
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+        tty_clearline(y);
+    }
+    tty_row    = 0;
+    tty_column = 0;
+}
+
 void tty_scroll() {
     for (size_t y = 1; y < VGA_HEIGHT; y++) {
         for (size_t x = 0; x < VGA_WIDTH; x++) {
