@@ -69,8 +69,8 @@
     __extension__({                                                            \
         __typeof__(_s) __s = (_s);                                             \
         KEY_SCANCODE(__s) < 128                                                \
-            ? keyboard_layout_us[KEY_MOD(__s, KEY_MOD_SHIFT) ? 1 : 0]          \
-                                [KEY_SCANCODE(__s)]                            \
+            ? kblayout_us[KEY_MOD(__s, KEY_MOD_SHIFT) ? 1 : 0]                 \
+                         [KEY_SCANCODE(__s)]                                   \
             : 0;                                                               \
     })
 
@@ -80,7 +80,7 @@ struct Keyboard {
     bool     chars[128];
 };
 
-extern uint8_t         keyboard_layout_us[2][128];
+extern uint8_t         kblayout_us[2][128];
 extern struct Keyboard keyboard;
 
 #define keyboard_key(_s) (keyboard.keys[(_s)])
