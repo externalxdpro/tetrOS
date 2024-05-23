@@ -6,8 +6,10 @@
 #include "idt.h"
 #include "irq.h"
 #include "isr.h"
+#include "keyboard.h"
 #include "timer.h"
 #include "tty.h"
+#include "util.h"
 
 #if defined(__linux__)
 #error                                                                         \
@@ -23,10 +25,13 @@ void kernel_main() {
     idt_install();
     isr_install();
     irq_install();
-    __asm__ __volatile__("sti");
+    asm("sti");
     timer_install();
-
+    keyboard_install();
     tty_initialize();
 
+    /* timer_wait(1000); */
     tty_writestring("Hello, world!\n");
+
+    while (true) {}
 }

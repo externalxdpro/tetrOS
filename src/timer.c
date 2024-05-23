@@ -17,7 +17,7 @@ uint64_t timer_get() { return timer_ticks; }
 void timer_wait(uint64_t ticks) {
     uint64_t eticks = timer_ticks + ticks;
     while (timer_ticks < eticks) {
-        __asm__ __volatile__("sti//hlt//cli");
+        asm("sti//hlt//cli");
     }
 }
 
