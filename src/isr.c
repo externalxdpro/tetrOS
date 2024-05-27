@@ -1,7 +1,6 @@
 #include "isr.h"
 #include "idt.h"
 #include "system.h"
-#include "tty.h"
 
 extern void _isr0();
 extern void _isr1();

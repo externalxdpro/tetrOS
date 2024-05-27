@@ -1,8 +1,5 @@
 #include "keyboard.h"
 #include "irq.h"
-#include "system.h"
-#include "timer.h"
-#include "tty.h"
 #include "util.h"
 
 uint8_t kblayout_us[2][128] = {
@@ -212,8 +209,6 @@ static void keyboard_handler(struct registers *regs) {
     } else if (KEY_SCANCODE(scan_code) == KEY_SCROLL_LOCK) {
         keyboard.mods = BIT_SET(keyboard.mods, HIBIT(KEY_MOD_SCROLL_LOCK),
                                 KEY_IS_PRESSED(scan_code));
-    } else {
-        tty_putchar(KEY_CHAR(scan_code));
     }
 
     keyboard.keys[(uint8_t)(scan_code & 0x7F)] = KEY_IS_PRESSED(scan_code);

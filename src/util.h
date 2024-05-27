@@ -3,6 +3,26 @@
 
 #include <stdint.h>
 
+#define __MIN_IMPL(_x, _y, _xn, _yn)                                           \
+    __extension__({                                                            \
+        __typeof__(_x) _xn = (_x);                                             \
+        __typeof__(_y) _yn = (_y);                                             \
+        (_xn < _yn ? _xn : _yn);                                               \
+    })
+#define MIN(_x, _y)                                                            \
+    __MIN_IMPL(_x, _y, CONCAT(__x, __COUNTER__), CONCAT(__y, __COUNTER__))
+
+#define __MAX_IMPL(_x, _y, _xn, _yn)                                           \
+    __extension__({                                                            \
+        __typeof__(_x) _xn = (_x);                                             \
+        __typeof__(_y) _yn = (_y);                                             \
+        (_xn > _yn ? _xn : _yn);                                               \
+    })
+#define MAX(_x, _y)                                                            \
+    __MAX_IMPL(_x, _y, CONCAT(__x, __COUNTER__), CONCAT(__y, __COUNTER__))
+
+#define CLAMP(_x, _mi, _ma) (MAX(_mi, MIN(_x, _ma)))
+
 #define HIBIT(_x) (31 - __builtin_clz((_x)))
 
 #define BIT_SET(_v, _n, _x)                                                    \
