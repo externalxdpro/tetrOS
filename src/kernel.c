@@ -2,12 +2,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "font.h"
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
 #include "isr.h"
 #include "keyboard.h"
 #include "screen.h"
+#include "string.h"
 #include "timer.h"
 #include "util.h"
 
@@ -30,6 +32,11 @@ void kernel_main() {
     keyboard_install();
 
     asm("sti");
+
+    screen_clear(COLOUR(0, 0, 3));
+    font_char('a', 32, 32, COLOUR(2, 4, 1));
+    font_str("ITS TETRIS TIME", 8, 48, COLOUR(7, 7, 3));
+    screen_update();
 
     while (true) {}
 }

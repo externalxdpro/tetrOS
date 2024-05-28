@@ -1,6 +1,7 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define __MIN_IMPL(_x, _y, _xn, _yn)                                           \

@@ -10,6 +10,8 @@ uint8_t _screen_buffer[SCREEN_SIZE];
 #define PALETTE_WRITE 0x3C8
 #define PALETTE_DATA 0x3C9
 
+void screen_update() { memcpy(BUFFER, &_screen_buffer, SCREEN_SIZE); }
+
 void screen_clear(uint8_t colour) {
     memset(&_screen_buffer, colour, SCREEN_SIZE);
 }

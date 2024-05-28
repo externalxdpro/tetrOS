@@ -45,6 +45,7 @@ extern uint8_t _screen_buffer[SCREEN_SIZE];
         }                                                                      \
     } while (0)
 
+void screen_update();
 void screen_clear(uint8_t colour);
 void screen_install();
 
