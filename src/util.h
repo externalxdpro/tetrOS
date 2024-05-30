@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define CONCAT_IMPL(x, y) x##y
+#define CONCAT(x, y) CONCAT_IMPL(x, y)
+
 #define __MIN_IMPL(_x, _y, _xn, _yn)                                           \
     __extension__({                                                            \
         __typeof__(_x) _xn = (_x);                                             \
@@ -25,6 +28,12 @@
 #define CLAMP(_x, _mi, _ma) (MAX(_mi, MIN(_x, _ma)))
 
 #define HIBIT(_x) (31 - __builtin_clz((_x)))
+
+#define LOBIT(_x)                                                              \
+    __extension__({                                                            \
+        __typeof__(_x) __x = (_x);                                             \
+        HIBIT(__x & -__x);                                                     \
+    })
 
 #define BIT_SET(_v, _n, _x)                                                    \
     __extension__({                                                            \

@@ -2,14 +2,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "font.h"
+#include "game.h"
 #include "gdt.h"
 #include "idt.h"
 #include "irq.h"
 #include "isr.h"
 #include "keyboard.h"
 #include "screen.h"
-#include "string.h"
 #include "timer.h"
 #include "util.h"
 
@@ -30,13 +29,35 @@ void kernel_main() {
     screen_install();
     timer_install();
     keyboard_install();
+    generate_sprites();
 
     asm("sti");
 
-    screen_clear(COLOUR(0, 0, 3));
-    font_char('a', 32, 32, COLOUR(2, 4, 1));
-    font_str("ITS TETRIS TIME", 8, 48, COLOUR(7, 7, 3));
-    screen_update();
+    state.menu = true;
 
-    while (true) {}
+    uint32_t last_frame = 0;
+    uint32_t last       = 0;
+
+    while (true) {
+        const uint32_t now = (uint32_t)timer_get();
+
+        if (now != last) {
+            last = now;
+        }
+
+        if ((now - last_frame) > (TIMER_TPS / FPS)) {
+            last_frame = now;
+
+            if (state.menu) {
+                update_menu();
+                render_menu();
+            } else {
+                update();
+                render();
+            }
+
+            screen_update();
+            state.frames++;
+        }
+    }
 }
