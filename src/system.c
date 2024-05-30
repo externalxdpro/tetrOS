@@ -2,6 +2,15 @@
 #include "font.h"
 #include "screen.h"
 
+uint32_t rseed = 1;
+
+void seed(uint32_t s) { rseed = s; }
+
+uint32_t rand() {
+    rseed = rseed * 1103515245 + 12345;
+    return (unsigned int)(rseed / 65536) % 32768;
+}
+
 void panic(const char *err) {
     screen_clear(COLOUR(7, 0, 0));
 

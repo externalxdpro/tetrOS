@@ -3,6 +3,7 @@
 #include "keyboard.h"
 #include "screen.h"
 #include "string.h"
+#include "system.h"
 
 #define LOGO_HEIGHT 5
 static const char *LOGO[LOGO_HEIGHT] = {
@@ -110,7 +111,7 @@ fail:
 
 bool spawn() {
     if (state.next == NULL) {
-        state.next = &TETROMINOS[0]; // TODO: Add rand function
+        state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
     }
 
     state.curr.ttm = state.next;
@@ -125,7 +126,7 @@ bool spawn() {
         return false;
     }
 
-    state.next = &TETROMINOS[0]; // TODO: Add rand function
+    state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
     return true;
 }
 
