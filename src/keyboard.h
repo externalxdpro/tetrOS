@@ -84,7 +84,7 @@ extern uint8_t         kblayout_us[2][128];
 extern struct Keyboard keyboard;
 
 #define keyboard_key(_s) (keyboard.keys[(_s)])
-#define keyboard_char(_c) (keyboard.chars[(u8)(_c)])
+#define keyboard_char(_c) (keyboard.chars[(uint8_t)(_c)])
 
 void keyboard_install();
 

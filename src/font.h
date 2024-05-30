@@ -12,7 +12,7 @@
         __typeof__(_x) __x = (_x);                                             \
         __typeof__(_y) __y = (_y);                                             \
         __typeof__(_c) __c = (_c);                                             \
-        font_str(__s, __x + 1, __y + 1, COLOR_ADD(__c, -2));                   \
+        font_str(__s, __x + 1, __y + 1, COLOUR_ADD(__c, -2));                  \
         font_str(__s, __x, __y, __c);                                          \
     } while (0);
 
