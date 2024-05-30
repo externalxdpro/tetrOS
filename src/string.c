@@ -1,42 +1,30 @@
 #include "string.h"
+#include "system.h"
 
-char *itoa(uint32_t num, char *str, int base) {
-    int  i          = 0;
-    bool isNegative = false;
-
-    if (num == 0) {
-        str[i++] = '0';
-        str[i]   = '\0';
-        return str;
+char *itoa(int32_t x, char *s, size_t sz) {
+    if (sz < 20) {
+        panic("ITOA BUFFER TOO SMALL");
     }
 
-    if (num < 0 && base == 10) {
-        isNegative = true;
-        num        = -num;
+    uint32_t tmp;
+    int32_t  i, j;
+
+    tmp = x;
+    i   = 0;
+
+    do {
+        tmp    = x % 10;
+        s[i++] = (tmp < 10) ? (tmp + '0') : (tmp + 'a' - 10);
+    } while (x /= 10);
+    s[i--] = 0;
+
+    for (j = 0; j < i; j++, i--) {
+        tmp  = s[j];
+        s[j] = s[i];
+        s[i] = tmp;
     }
 
-    while (num != 0) {
-        int rem  = num % base;
-        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-        num      = num / base;
-    }
-
-    if (isNegative)
-        str[i++] = '-';
-
-    str[i] = '\0';
-
-    int start = 0;
-    int end   = i - 1;
-    while (start < end) {
-        char temp  = str[start];
-        str[start] = str[end];
-        str[end]   = temp;
-        end--;
-        start++;
-    }
-
-    return str;
+    return s;
 }
 
 void memset(void *dst, uint8_t value, size_t n) {
@@ -56,6 +44,21 @@ void *memcpy(void *dst, const void *src, size_t n) {
     }
 
     return d;
+}
+
+void *memmove(void *dst, const void *src, size_t n) {
+    if (dst < src) {
+        return memcpy(dst, src, n);
+    }
+
+    uint8_t       *d = dst;
+    const uint8_t *s = src;
+
+    for (size_t i = n; i > 0; i--) {
+        d[i - 1] = s[i - 1];
+    }
+
+    return dst;
 }
 
 size_t strlen(const char *str) {
