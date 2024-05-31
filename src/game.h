@@ -103,10 +103,10 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
         .colour = BLUE,
         .rotations =
             {
-                0x8E00,
-                0x6440,
                 0x0E20,
                 0x44C0,
+                0x8E00,
+                0x6440,
             },
     },
     {
@@ -114,10 +114,10 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
         .colour = ORANGE,
         .rotations =
             {
-                0x2E00,
-                0x4460,
                 0x0E80,
                 0xC440,
+                0x2E00,
+                0x4460,
             },
     },
     {
@@ -158,10 +158,10 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
         .colour = PURPLE,
         .rotations =
             {
-                0x4E00,
-                0x4640,
                 0x0E40,
                 0x4C40,
+                0x4E00,
+                0x4640,
             },
     },
 };
