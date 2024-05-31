@@ -114,10 +114,10 @@ bool spawn() {
         state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
     }
 
-    state.curr.ttm = state.next;
-    state.curr.r   = 0;
-    state.curr.x   = (BOARD_WIDTH / 2) - 2;
-    state.curr.y   = -TTM_OFFSET_Y(state.curr.ttm->rotations[state.curr.r]) - 1;
+    state.curr.ttm  = state.next;
+    state.curr.r    = 0;
+    state.curr.x    = (BOARD_WIDTH / 2) - 2;
+    state.curr.y    = -TTM_OFFSET_Y(state.curr.ttm->rotations[state.curr.r]);
     state.curr.done = false;
 
     if (!try_modify(state.curr.ttm, 0, 0, 0,
