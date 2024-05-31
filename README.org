@@ -6,7 +6,9 @@
 + grub
 
 * Running
-Unix-like:
+** Unix-like:
 #+begin_src shell
-make && make run
+make
+make iso
+qemu-system-i386 -cdrom boot.iso -d int -no-reboot
 #+end_src
