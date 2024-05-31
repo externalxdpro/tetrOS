@@ -99,7 +99,7 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
             },
     },
     {
-        // L
+        // J
         .colour = BLUE,
         .rotations =
             {
@@ -110,7 +110,7 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
             },
     },
     {
-        // J
+        // L
         .colour = ORANGE,
         .rotations =
             {
