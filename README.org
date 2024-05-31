@@ -10,5 +10,5 @@
 #+begin_src shell
 make
 make iso
-qemu-system-i386 -cdrom boot.iso -d int -no-reboot
+qemu-system-i386 -cdrom boot.iso
 #+end_src
