@@ -168,7 +168,7 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
 
 #define NUM_LEVELS 30
 
-#define NUM_CONTROLS 7
+#define NUM_CONTROLS 6
 struct Control {
     bool     down;
     bool     last;
@@ -197,7 +197,6 @@ struct State {
         struct {
             struct Control rotate_left;
             struct Control rotate_right;
-            struct Control rotate;
             struct Control left;
             struct Control right;
             struct Control down;

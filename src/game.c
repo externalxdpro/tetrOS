@@ -340,8 +340,7 @@ void update() {
     }
 
     const bool control_states[NUM_CONTROLS] = {
-        keyboard_char('a'),       //
-        keyboard_char('d'),       //
+        keyboard_key(KEY_LCTRL),  //
         keyboard_char(KEY_UP),    //
         keyboard_char(KEY_LEFT),  //
         keyboard_char(KEY_RIGHT), //
@@ -362,8 +361,7 @@ void update() {
 
     if (state.controls.rotate_left.pressed) {
         rotate(false);
-    } else if (state.controls.rotate_right.pressed ||
-               state.controls.rotate.pressed) {
+    } else if (state.controls.rotate_right.pressed) {
         rotate(true);
     }
 
