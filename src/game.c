@@ -70,6 +70,7 @@ void done() {
     }
 
     state.curr.done = true;
+    state.held      = false;
 }
 
 bool try_modify(const struct Tetromino *ttm, uint16_t tc, int32_t xc,
@@ -109,12 +110,29 @@ fail:
     return false;
 }
 
-bool spawn() {
-    if (state.next == NULL) {
+bool spawn(const struct Tetromino *ttm) {
+    if (ttm == NULL) {
+        if (state.next == NULL) {
+            state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
+        }
+
+        state.curr.ttm = state.next;
+        state.curr.r   = 0;
+        state.curr.x   = (BOARD_WIDTH / 2) - 2;
+        state.curr.y   = -TTM_OFFSET_Y(state.curr.ttm->rotations[state.curr.r]);
+        state.curr.done = false;
+
+        if (!try_modify(state.curr.ttm, 0, 0, 0,
+                        state.curr.ttm->rotations[state.curr.r], state.curr.x,
+                        state.curr.y)) {
+            return false;
+        }
+
         state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
+        return true;
     }
 
-    state.curr.ttm  = state.next;
+    state.curr.ttm  = ttm;
     state.curr.r    = 0;
     state.curr.x    = (BOARD_WIDTH / 2) - 2;
     state.curr.y    = -TTM_OFFSET_Y(state.curr.ttm->rotations[state.curr.r]);
@@ -126,7 +144,6 @@ bool spawn() {
         return false;
     }
 
-    state.next = &TETROMINOS[rand() % NUM_TETROMINOS];
     return true;
 }
 
@@ -253,6 +270,22 @@ void render_ui() {
             }
         }
     }
+
+    font_str_doubled("HOLD", X_OFFSET_LEFT, TILE_SIZE * 7, COLOUR(7, 7, 3));
+
+    for (size_t j = 0; j < TTM_SIZE; j++) {
+        for (size_t i = 0; i < TTM_SIZE; i++) {
+            uint16_t tiles = state.hold->rotations[0];
+
+            if (TTM_BLOCK(tiles, i, j)) {
+                render_tile(state.hold->colour,
+                            X_OFFSET_LEFT +
+                                ((i - TTM_OFFSET_X(tiles)) * TILE_SIZE),
+                            Y_OFFSET_LEFT * 7 + (TILE_SIZE / 2) +
+                                ((j - TTM_OFFSET_Y(tiles) + 1) * TILE_SIZE));
+            }
+        }
+    }
 }
 
 void render_game_over() {
@@ -278,6 +311,36 @@ void render_game_over() {
                      (SCREEN_HEIGHT / 2) + TILE_SIZE, COLOUR(7, 7, 3));
 }
 
+void hold() { // TODO: finish this function
+    if (state.held) {
+        return;
+    }
+
+    const struct Tetromino *held = state.hold;
+    state.hold                   = state.curr.ttm;
+
+    for (size_t j = 0; j < TTM_SIZE; j++) {
+        for (size_t i = 0; i < TTM_SIZE; i++) {
+            uint16_t tiles = state.curr.ttm->rotations[state.curr.r];
+
+            if (TTM_BLOCK(tiles, i, j)) {
+                state.board[j + state.curr.y][i + state.curr.x] = NONE;
+            }
+        }
+    }
+
+    /* if (TTM_BLOCK(tiles, i, j)) { */
+    /*     render_tile(state.hold->colour, */
+    /*                 X_OFFSET_LEFT + */
+    /*                     ((i - TTM_OFFSET_X(tiles)) * TILE_SIZE), */
+    /*                 Y_OFFSET_LEFT * 7 + (TILE_SIZE / 2) + */
+    /*                     ((j - TTM_OFFSET_Y(tiles) + 1) * TILE_SIZE)); */
+    /* } */
+
+    spawn(held);
+    state.held = true;
+}
+
 void step() {
     bool stopped = !move(0, 1);
 
@@ -293,7 +356,7 @@ void reset(uint32_t level) {
     state.frames_since_step = FRAMES_PER_STEP[0];
     state.level             = 0;
     state.lines_left        = state.level * 10 + 10;
-    spawn();
+    spawn(NULL);
 }
 
 void update() {
@@ -329,7 +392,7 @@ void update() {
         }
     }
 
-    if (state.curr.done && !spawn()) {
+    if (state.curr.done && !spawn(NULL)) {
         state.game_over = true;
         return;
     }
@@ -346,6 +409,7 @@ void update() {
         keyboard_char(KEY_RIGHT), //
         keyboard_char(KEY_DOWN),  //
         keyboard_char(' '),       //
+        keyboard_key(KEY_LSHIFT)  //
     };
 
     for (size_t i = 0; i < NUM_CONTROLS; i++) {
@@ -379,6 +443,10 @@ void update() {
     } else if (state.controls.drop.pressed) {
         while (move(0, 1)) {}
         done();
+    }
+
+    if (state.controls.hold.pressed) {
+        hold();
     }
 
     if (--state.frames_since_step == 0) {

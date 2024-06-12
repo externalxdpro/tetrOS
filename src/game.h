@@ -168,7 +168,7 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
 
 #define NUM_LEVELS 30
 
-#define NUM_CONTROLS 6
+#define NUM_CONTROLS 7
 struct Control {
     bool     down;
     bool     last;
@@ -182,9 +182,9 @@ struct State {
     uint32_t frames, steps, frames_since_step;
     uint32_t score, lines, level;
     int32_t  lines_left;
-    bool     menu, pause, stopped, destroy, game_over, music;
+    bool     menu, pause, stopped, destroy, game_over, held;
 
-    const struct Tetromino *next;
+    const struct Tetromino *next, *hold;
 
     struct {
         const struct Tetromino *ttm;
@@ -201,6 +201,7 @@ struct State {
             struct Control right;
             struct Control down;
             struct Control drop;
+            struct Control hold;
         };
         struct Control raw[NUM_CONTROLS];
     } controls;
