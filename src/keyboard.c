@@ -1,7 +1,9 @@
+// Includes
 #include "keyboard.h"
 #include "irq.h"
 #include "util.h"
 
+// Sets the keyboard layout
 uint8_t kblayout_us[2][128] = {
     {KEY_NULL,
      KEY_ESC,
@@ -183,8 +185,10 @@ uint8_t kblayout_us[2][128] = {
      KEY_F12},
 };
 
+// Initialize keyboard struct
 struct Keyboard keyboard;
 
+// Handles keyboard input and modifier keys
 static void keyboard_handler(struct registers *regs) {
     uint16_t scan_code = (uint16_t)inportb(0x60);
 
@@ -215,4 +219,5 @@ static void keyboard_handler(struct registers *regs) {
     keyboard.chars[KEY_CHAR(scan_code)]        = KEY_IS_PRESSED(scan_code);
 }
 
+// Installs the keyboard handler into IRQ
 void keyboard_install() { irq_install_handler(1, keyboard_handler); }

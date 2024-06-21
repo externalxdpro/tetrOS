@@ -1,11 +1,13 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
+// Includes
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "util.h"
 
+// Defines
 #define KEY_NULL 0
 #define KEY_ESC 27
 #define KEY_BACKSPACE '\b'
@@ -74,18 +76,23 @@
             : 0;                                                               \
     })
 
+// A struct that holds the keys, modifier keys, and characters of the buttons
+// pressed on the keyboard
 struct Keyboard {
     uint16_t mods;
     bool     keys[128];
     bool     chars[128];
 };
 
+// Make some stuff available from the C file
 extern uint8_t         kblayout_us[2][128];
 extern struct Keyboard keyboard;
 
+// Defines
 #define keyboard_key(_s) (keyboard.keys[(_s)])
 #define keyboard_char(_c) (keyboard.chars[(uint8_t)(_c)])
 
+// Functions
 void keyboard_install();
 
 #endif // KEYBOARD_H_

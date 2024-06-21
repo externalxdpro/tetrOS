@@ -1,9 +1,11 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
+// Includes
 #include "string.h"
 #include "util.h"
 
+// Defines
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
 #define SCREEN_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT)
@@ -45,6 +47,7 @@ extern uint8_t _screen_buffer[SCREEN_SIZE];
         }                                                                      \
     } while (0)
 
+// Functions
 void screen_update();
 void screen_clear(uint8_t colour);
 void screen_install();

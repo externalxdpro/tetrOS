@@ -1,9 +1,11 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+// Includes
 #include <stddef.h>
 #include <stdint.h>
 
+// Defines (This is just a bunch of macros to do math stuff)
 #define CONCAT_IMPL(x, y) x##y
 #define CONCAT(x, y) CONCAT_IMPL(x, y)
 

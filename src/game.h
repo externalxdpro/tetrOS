@@ -1,18 +1,22 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+// Includes
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "screen.h"
 #include "util.h"
 
+// Defines
 #define FPS 30
 #define LEVELS 30
 
 #define TILE_SIZE 10
 
 #define NUM_TILES (BORDER + 1)
+
+// An enum that contains the colour of a tile
 enum Tile {
     NONE = 0,
     GREEN,
@@ -26,6 +30,7 @@ enum Tile {
     BORDER
 };
 
+// Defines
 #define TILE_MASK 0x0F
 #define TILE_FLAG_FLASH 0x10
 #define TILE_FLAG_DESTROY 0x20
@@ -43,6 +48,7 @@ static const uint8_t TILE_COLOURS[NUM_TILES] = {
     [BORDER] = COLOUR(2, 2, 1), //
 };
 
+// Defines
 #define BOARD_WIDTH 10
 #define BOARD_HEIGHT 20
 #define BOARD_SIZE (BOARD_WIDTH * BOARD_HEIGHT)
@@ -80,11 +86,13 @@ static const uint8_t TILE_COLOURS[NUM_TILES] = {
         for (int32_t _xname = 0, _xxname = (_xbase); _xname < TTM_SIZE;        \
              _xname++, _xxname++)
 
+// A struct containing the colour and the rotations of a tetromino
 struct Tetromino {
     enum Tile colour;
     uint16_t  rotations[4];
 };
 
+// Set the colour and rotations of each tetromino in an array
 #define NUM_TETROMINOS 7
 static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
     {
@@ -169,6 +177,8 @@ static const struct Tetromino TETROMINOS[NUM_TETROMINOS] = {
 #define NUM_LEVELS 30
 
 #define NUM_CONTROLS 7
+
+// A struct that contains the states of a button
 struct Control {
     bool     down;
     bool     last;
@@ -176,6 +186,7 @@ struct Control {
     uint32_t pressed_frames;
 };
 
+// A struct that contains the state of the game currently
 struct State {
     uint8_t board[BOARD_HEIGHT][BOARD_WIDTH];
 
@@ -208,6 +219,7 @@ struct State {
 };
 extern struct State state;
 
+// Functions
 void generate_sprites();
 
 void update();

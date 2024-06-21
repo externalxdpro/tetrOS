@@ -1,7 +1,9 @@
+// Includes
 #include "font.h"
 #include "screen.h"
 #include "system.h"
 
+// 8x8 font for ASCII 0..127
 static const uint8_t FONT[128][8] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // U+0000 (nul)
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // U+0001
@@ -133,6 +135,8 @@ static const uint8_t FONT[128][8] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}  // U+007F
 };
 
+// A function that prints the current character at the specified position and
+// colour
 void font_char(char c, size_t x, size_t y, uint8_t colour) {
     const uint8_t *glyph = FONT[(size_t)c];
 
@@ -145,6 +149,7 @@ void font_char(char c, size_t x, size_t y, uint8_t colour) {
     }
 }
 
+// A function that prints a string at the specified position and colour
 void font_str(const char *s, size_t x, size_t y, uint8_t colour) {
     char c;
 

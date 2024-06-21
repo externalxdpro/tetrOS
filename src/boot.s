@@ -18,6 +18,7 @@
 .long   0
 .long   0
 
+;; Set resolution
 .long 0
 .long 320
 .long 200
@@ -30,6 +31,7 @@ stack_bottom:
 stack_top:
 
 
+;; Runs the main function
 .section .text
 .global _start
 .type _start, @function
@@ -48,6 +50,7 @@ _start:
 .size _start, . - _start
 
 
+;; GDT stuff
 .global gdt_flush
 .extern gp
 gdt_flush:
@@ -64,6 +67,7 @@ flush2:
     ret
 
 
+;; IDT stuff
 .global idt_load
 .extern idtp
 idt_load:
@@ -71,6 +75,7 @@ idt_load:
     ret
 
 
+;; Macros for if the ISR register has an error associated or not
 .macro ISR_NO_ERR index
     .global _isr\index
     _isr\index:
@@ -88,6 +93,7 @@ idt_load:
         jmp isr_common_stub
 .endm
 
+// Set ISRs
 ISR_NO_ERR 0
 ISR_NO_ERR 1
 ISR_NO_ERR 2
@@ -121,6 +127,7 @@ ISR_NO_ERR 29
 ISR_NO_ERR 30
 ISR_NO_ERR 31
 
+;; Handles stuff for ISR
 isr_common_stub:
     pusha
     push %ds
@@ -145,6 +152,7 @@ isr_common_stub:
     add $8, %esp
     iret
 
+;; Sets IRQs
 .global _irq0
 .global _irq1
 .global _irq2
@@ -258,6 +266,7 @@ _irq15:
     push $47
     jmp irq_common_stub
 
+;; Handles IRQ stuff
 .extern irq_handler
 irq_common_stub:
     pusha

@@ -1,3 +1,4 @@
+// Includes
 #include "game.h"
 #include "font.h"
 #include "keyboard.h"
@@ -5,6 +6,7 @@
 #include "string.h"
 #include "system.h"
 
+// Set the logo
 #define LOGO_HEIGHT 5
 static const char *LOGO[LOGO_HEIGHT] = {
     "AAA BBB CCC DD  EEE FFF", //
@@ -14,6 +16,7 @@ static const char *LOGO[LOGO_HEIGHT] = {
     " A  BBB  C  D D EEE FFF", //
 };
 
+// Initialize sprite array
 uint8_t TILE_SPRITES[NUM_TILES][TILE_SIZE * TILE_SIZE] = {0};
 
 // from listfist.com/list-of-tetris-levels-by-speed-nes-ntsc-vs-pal
@@ -21,10 +24,15 @@ const uint8_t FRAMES_PER_STEP[NUM_LEVELS] = {
     48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4,
     4,  3,  3,  3,  2,  2,  2,  2,  2, 2, 2, 2, 2, 1};
 
+// Set line multipliers
 const uint32_t LINE_MULTIPLIERS[4] = {40, 100, 300, 1200};
 
+// Initialize state
 struct State state;
 
+// A function that does some actions when the current piece is done
+// It flashes the current piece and checks how many lines are full and have to
+// be cleared
 void done() {
     TTM_FOREACH(x, y, xx, yy, state.curr.x, state.curr.y) {
         if (IN_BOARD(xx, yy) &&
@@ -73,6 +81,7 @@ void done() {
     state.held      = false;
 }
 
+// A function that trys to modify a piece (move/rotate)
 bool try_modify(const struct Tetromino *ttm, uint16_t tc, int32_t xc,
                 int32_t yc, uint16_t tn, int32_t xn, int32_t yn) {
     uint8_t board[BOARD_HEIGHT][BOARD_WIDTH];
@@ -110,6 +119,9 @@ fail:
     return false;
 }
 
+// A function that spawns a new tetromino
+// If a tetromino is put in as an argument, that piece will spawn
+// Otherwise, a random piece will be spawned
 bool spawn(const struct Tetromino *ttm) {
     if (ttm == NULL) {
         if (state.next == NULL) {
@@ -147,6 +159,9 @@ bool spawn(const struct Tetromino *ttm) {
     return true;
 }
 
+// A function that moves the current piece a specific number of cells in the x
+// and y axis
+// Returns true if succeeded
 bool move(int32_t dx, int32_t dy) {
     if (try_modify(state.curr.ttm, state.curr.ttm->rotations[state.curr.r],
                    state.curr.x, state.curr.y,
@@ -160,6 +175,8 @@ bool move(int32_t dx, int32_t dy) {
     return false;
 }
 
+// A function that rotates the current piece (to the right if true is passed in)
+// Returns true if succeeded
 bool rotate(bool right) {
     uint8_t r = (state.curr.r + (right ? 1 : -1) + 4) % 4;
 
@@ -173,6 +190,8 @@ bool rotate(bool right) {
     return false;
 }
 
+// A function that generates the sprites for each tetromino and saves it into
+// the array at the top of the file
 void generate_sprites() {
     for (enum Tile t = 0; t < NUM_TILES; t++) {
         if (t == NONE) {
@@ -198,6 +217,8 @@ void generate_sprites() {
     }
 }
 
+// A function that renders a specific tile using a colour, and a x and y point
+// on the board
 void render_tile(enum Tile tile, size_t x, size_t y) {
     uint8_t *pixels = TILE_SPRITES[tile];
     for (size_t j = 0; j < TILE_SIZE; j++) {
@@ -205,6 +226,7 @@ void render_tile(enum Tile tile, size_t x, size_t y) {
     }
 }
 
+// A function that renders the border around the board
 void render_border() {
     for (size_t y = 0; y < (SCREEN_HEIGHT / TILE_SIZE); y++) {
         size_t yy = BOARD_Y + (y * TILE_SIZE);
@@ -214,6 +236,8 @@ void render_border() {
     }
 }
 
+// A function that renders the board
+// Fills the background with black and the tiles with their specific colours
 void render_board() {
     for (size_t y = 0; y < BOARD_HEIGHT; y++) {
         for (size_t x = 0; x < BOARD_WIDTH; x++) {
@@ -232,6 +256,8 @@ void render_board() {
     }
 }
 
+// A function that renders the stats and the next and held piece outside the
+// border of the screen
 void render_ui() {
 #define X_OFFSET_RIGHT (BOARD_X + BOARD_WIDTH_PX + (TILE_SIZE * 2))
 
@@ -240,7 +266,7 @@ void render_ui() {
         char buf[32];                                                          \
         itoa((_value), buf, 32);                                               \
         font_str_doubled((_title), (_x), (_y), COLOUR(7, 7, 3));               \
-        font_str_doubled(buf, (_x) + (_w) - font_width(buf), (_y) + TILE_SIZE, \
+        font_str_doubled(buf, (_x) + (_w)-font_width(buf), (_y) + TILE_SIZE,   \
                          (_colour));                                           \
     } while (0);
 
@@ -288,6 +314,8 @@ void render_ui() {
     }
 }
 
+// A function that renders the game over screen
+// Shows text saying "GAME OVER" and the score
 void render_game_over() {
     const size_t w = SCREEN_WIDTH / 3;
     const size_t h = SCREEN_HEIGHT / 3;
@@ -311,9 +339,11 @@ void render_game_over() {
                      (SCREEN_HEIGHT / 2) + TILE_SIZE, COLOUR(7, 7, 3));
 }
 
-void hold() { // TODO: finish this function
+// A function that holds the current piece if a piece has not been held yet this
+// turn
+bool hold() {
     if (state.held) {
-        return;
+        return false;
     }
 
     const struct Tetromino *held = state.hold;
@@ -329,18 +359,14 @@ void hold() { // TODO: finish this function
         }
     }
 
-    /* if (TTM_BLOCK(tiles, i, j)) { */
-    /*     render_tile(state.hold->colour, */
-    /*                 X_OFFSET_LEFT + */
-    /*                     ((i - TTM_OFFSET_X(tiles)) * TILE_SIZE), */
-    /*                 Y_OFFSET_LEFT * 7 + (TILE_SIZE / 2) + */
-    /*                     ((j - TTM_OFFSET_Y(tiles) + 1) * TILE_SIZE)); */
-    /* } */
-
     spawn(held);
     state.held = true;
+
+    return true;
 }
 
+// A function that moves the current piece down
+// If the piece cannot be moved down for two steps the piece will be placed
 void step() {
     bool stopped = !move(0, 1);
 
@@ -351,14 +377,19 @@ void step() {
     state.stopped = stopped;
 }
 
+// A function that resets the state of the game
 void reset(uint32_t level) {
     memset(&state, 0, sizeof(state));
-    state.frames_since_step = FRAMES_PER_STEP[0];
-    state.level             = 0;
+    state.frames_since_step = FRAMES_PER_STEP[level];
+    state.level             = level;
     state.lines_left        = state.level * 10 + 10;
     spawn(NULL);
 }
 
+// A function that updates the logic of the game every frame
+// (stuff like resetting the game when enter is pressed on the game over screen,
+// moving the current piece down, checking if the piece is done, checking
+// controls, etc...)
 void update() {
     if (state.game_over) {
         if (keyboard_char('\n')) {
@@ -456,6 +487,7 @@ void update() {
     }
 }
 
+// A function that handles rendering game stuff
 void render() {
     screen_clear(COLOUR(0, 0, 0));
     render_border();
@@ -467,6 +499,7 @@ void render() {
     }
 }
 
+// A function that starts the game if enter is pressed in the menu
 void update_menu() {
     if (keyboard_char(KEY_ENTER)) {
         reset(0);
@@ -474,6 +507,7 @@ void update_menu() {
     }
 }
 
+// A function that handles rendering menu stuff with animations!!!
 void render_menu() {
     screen_clear(COLOUR(0, 0, 0));
 

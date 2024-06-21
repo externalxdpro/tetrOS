@@ -1,8 +1,10 @@
+// Includes
 #include "irq.h"
 #include "idt.h"
 #include "isr.h"
 #include "util.h"
 
+// Get functions from boot.s
 extern void _irq0();
 extern void _irq1();
 extern void _irq2();
@@ -20,14 +22,18 @@ extern void _irq13();
 extern void _irq14();
 extern void _irq15();
 
+// Initialize list of function pointers
 static void (*irq_routines[16])() = {0};
 
+// Installs a hander into the IRQ
 void irq_install_handler(int irq, void (*handler)(struct registers *r)) {
     irq_routines[irq] = handler;
 }
 
+// Uninstalls a hander from the IRQ
 void irq_uninstall_handler(int irq) { irq_routines[irq] = 0; }
 
+// Remaps some stuff for the IRQ
 void irq_remap() {
     outportb(0x20, 0x11);
     outportb(0xA0, 0x11);
@@ -41,6 +47,7 @@ void irq_remap() {
     outportb(0xA1, 0x0);
 }
 
+// Sets up the IRQ
 void irq_install() {
     irq_remap();
 
@@ -62,6 +69,7 @@ void irq_install() {
     idt_set_gate(47, (uintptr_t)_irq15, 0x08, 0x8E);
 }
 
+// Handles interrupts
 void irq_handler(struct registers *r) {
     void (*handler)(struct registers *r);
 

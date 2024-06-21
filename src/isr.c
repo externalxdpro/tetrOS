@@ -1,7 +1,9 @@
+// Includes
 #include "isr.h"
 #include "idt.h"
 #include "system.h"
 
+// Get functions from boot.s
 extern void _isr0();
 extern void _isr1();
 extern void _isr2();
@@ -35,6 +37,7 @@ extern void _isr29();
 extern void _isr30();
 extern void _isr31();
 
+// Sets up the ISR
 void isr_install() {
     idt_set_gate(0, (uintptr_t)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (uintptr_t)_isr1, 0x08, 0x8E);
@@ -70,6 +73,7 @@ void isr_install() {
     idt_set_gate(31, (uintptr_t)_isr31, 0x08, 0x8E);
 }
 
+// An array of exceptions
 static const char *exceptions[32] = {
     "Divide by zero",
     "Debug",
@@ -103,6 +107,7 @@ static const char *exceptions[32] = {
     "RESERVED",
 };
 
+// Handles exceptions
 void fault_handler(struct registers *r) {
     if (r->int_no < 32) {
         panic(exceptions[r->int_no]);
