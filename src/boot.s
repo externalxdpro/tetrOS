@@ -1,3 +1,4 @@
+// Boot stuff
 .set ALIGN,     1<<0
 .set MEMINFO,   1<<1
 .set VIDMODE,   0x00000004
@@ -18,7 +19,7 @@
 .long   0
 .long   0
 
-;; Set resolution
+// Set resolution
 .long 0
 .long 320
 .long 200
@@ -31,7 +32,7 @@ stack_bottom:
 stack_top:
 
 
-;; Runs the main function
+// Runs the main function
 .section .text
 .global _start
 .type _start, @function
@@ -50,7 +51,7 @@ _start:
 .size _start, . - _start
 
 
-;; GDT stuff
+// GDT stuff
 .global gdt_flush
 .extern gp
 gdt_flush:
@@ -67,7 +68,7 @@ flush2:
     ret
 
 
-;; IDT stuff
+// IDT stuff
 .global idt_load
 .extern idtp
 idt_load:
@@ -75,7 +76,7 @@ idt_load:
     ret
 
 
-;; Macros for if the ISR register has an error associated or not
+// Macros for if the ISR register has an error associated or not
 .macro ISR_NO_ERR index
     .global _isr\index
     _isr\index:
@@ -127,7 +128,7 @@ ISR_NO_ERR 29
 ISR_NO_ERR 30
 ISR_NO_ERR 31
 
-;; Handles stuff for ISR
+// Handles stuff for ISR
 isr_common_stub:
     pusha
     push %ds
@@ -152,7 +153,7 @@ isr_common_stub:
     add $8, %esp
     iret
 
-;; Sets IRQs
+// Sets IRQs
 .global _irq0
 .global _irq1
 .global _irq2
@@ -266,7 +267,7 @@ _irq15:
     push $47
     jmp irq_common_stub
 
-;; Handles IRQ stuff
+// Handles IRQ stuff
 .extern irq_handler
 irq_common_stub:
     pusha
