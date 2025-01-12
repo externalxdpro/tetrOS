@@ -1,12 +1,23 @@
-#+title: Readme
+#+title: tetrOS: An operating system that only plays Tetris
+
+* Images
+[[./images/title.png]]
+[[./images/game.png]]
+[[./images/gameover.png]]
+
+* Features
++ 32-bit (x86)
++ Modern Tetris gameplay (Piece holding, fast dropping, rotation in both directions)
++ Custom 8-bit RGB colour palette
 
 * Dependencies
 + make
 + qemu
 + grub
++ mtools
 
 * Running
-** Unix-like:
+** Unix-like
 #+begin_src shell
 make
 make iso
